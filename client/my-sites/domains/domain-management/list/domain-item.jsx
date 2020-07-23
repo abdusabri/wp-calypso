@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { connect } from 'react-redux';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import page from 'page';
@@ -26,6 +27,7 @@ import InfoPopover from 'components/info-popover';
 import { emailManagement } from 'my-sites/email/paths';
 import Spinner from 'components/spinner';
 import TrackComponentView from 'lib/analytics/track-component-view';
+import { composeAnalytics, recordGoogleEvent, recordTracksEvent } from 'state/analytics/actions';
 
 class DomainItem extends PureComponent {
 	static propTypes = {
@@ -78,11 +80,12 @@ class DomainItem extends PureComponent {
 	};
 
 	addEmailClick = ( event ) => {
-		const { currentRoute, disabled, domain, site } = this.props;
+		const { addEmailClick, currentRoute, disabled, domain, site } = this.props;
 		event.stopPropagation();
 		if ( disabled ) {
 			return;
 		}
+		addEmailClick(); // analytics/tracks
 		page( emailManagement( site.slug, domain.domain, currentRoute ) );
 	};
 
@@ -383,4 +386,14 @@ class DomainItem extends PureComponent {
 	}
 }
 
-export default localize( DomainItem );
+const addEmailClick = () =>
+	composeAnalytics(
+		recordGoogleEvent( 'Domain Management', 'Clicked "Add Email" Button in List/ListAll' ),
+		recordTracksEvent( 'calypso_domain_management_list_add_email_click' )
+	);
+
+export default connect( null, ( dispatch ) => {
+	return {
+		addEmailClick: () => dispatch( addEmailClick() ),
+	};
+} )( localize( DomainItem ) );
