@@ -31,6 +31,8 @@ class InlineSupportLink extends Component {
 		supportLink: PropTypes.string,
 		showText: PropTypes.bool,
 		text: PropTypes.string,
+		showHero: PropTypes.bool,
+		heroImage: PropTypes.string,
 		showIcon: PropTypes.bool,
 		iconSize: PropTypes.number,
 		tracksEvent: PropTypes.string,
@@ -44,6 +46,8 @@ class InlineSupportLink extends Component {
 		supportLink: null,
 		showText: true,
 		text: null,
+		showHero: false,
+		heroImage: null,
 		showIcon: true,
 		iconSize: 14,
 	};
@@ -52,6 +56,8 @@ class InlineSupportLink extends Component {
 		const {
 			showText,
 			text,
+			showHero,
+			heroImage,
 			supportPostId,
 			supportLink,
 			showIcon,
@@ -80,6 +86,7 @@ class InlineSupportLink extends Component {
 				rel="noopener noreferrer"
 				{ ...externalLinkProps }
 			>
+				{ showHero && <img src={ heroImage } alt="text" /> }
 				{ showText && ( text || translate( 'Learn more' ) ) }
 				{ supportPostId && showIcon && <Gridicon icon="help-outline" size={ iconSize } /> }
 			</LinkComponent>
